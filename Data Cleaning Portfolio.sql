@@ -15,14 +15,12 @@ FROM PortfolioProject.dbo.NashvilleHousing
 UPDATE NashvilleHousing
 SET SaleDate = CONVERT(Date, SaleDate)
 
+--- if update code above doesn't seem to change anything, proceed with following
 ALTER TABLE NashvilleHousing
 ADD SaleDateConverted Date;
 
 UPDATE NashvilleHousing
 SET SaleDateConverted = CONVERT(Date, SaleDate)
-
-SELECT SaleDateConverted, CONVERT(Date, SaleDate)
-FROM PortfolioProject.dbo.NashvilleHousing
 
 ------------------------------------------------------------
 
@@ -30,7 +28,6 @@ FROM PortfolioProject.dbo.NashvilleHousing
 
 SELECT *
 FROM PortfolioProject.dbo.NashvilleHousing
--- WHERE PropertyAddress IS NULL
 ORDER BY ParcelID
 
 SELECT a.ParcelID, a.PropertyAddress, b.ParcelID, b.PropertyAddress, ISNULL(a.PropertyAddress, b.PropertyAddress)
@@ -71,9 +68,6 @@ ADD PropertySplitCity NVARCHAR(255);
 UPDATE NashvilleHousing
 SET PropertySplitCity = SUBSTRING(PropertyAddress, CHARINDEX(',', PropertyAddress) + 1, LEN(PropertyAddress));
 
-SELECT *
-FROM NashvilleHousing;
-
 ------------------------------------------------------------
 
 -- Breaking out Owner Address into individual columns (Address, City, State)
@@ -103,9 +97,6 @@ ADD OwnerSplitState NVARCHAR(255);
 
 UPDATE NashvilleHousing
 SET OwnerSplitState = PARSENAME(REPLACE(OwnerAddress, ',', '.'), 1);
-
-SELECT *
-FROM NashvilleHousing;
 
 ------------------------------------------------------------
 
@@ -146,11 +137,6 @@ SELECT *,
 					LegalReference
 	    ORDER BY	UniqueID) row_num
 FROM NashvilleHousing )
--- ORDER BY ParcelID;
-
---DELETE
---FROM RowNumCTE
---WHERE row_num > 1; 
 
 SELECT *
 FROM RowNumCTE
