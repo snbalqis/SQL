@@ -140,7 +140,7 @@ SELECT *, (ContinuousVaccinatedPeople/NULLIF(Population, 0))*100
 FROM PercentPopulationVaccinated
 
 
--- creating view to store data for later visualisations
+-- an example of how to create view to store data for later visualisations
 
 USE PortfolioProject
 GO
