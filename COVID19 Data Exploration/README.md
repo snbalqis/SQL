@@ -55,6 +55,7 @@ or by copying the table with headers into Excel and manually saving it as a .XLS
 ## Tableau Dashboard Visualisation
 ![Dashboard 1](https://user-images.githubusercontent.com/119298843/224124826-dafcc097-40e6-4438-a6ab-8afd6f013355.png) <br>
 You can also interact with the location filter on [my tableau public](https://public.tableau.com/views/COVIDDashboard_16755919436880/Dashboard1?:language=en-GB&:display_count=n&:origin=viz_share_link) to change the countries of the population that are infected.
+<br>(please right click to open in new tab)
 
 </details>
 
