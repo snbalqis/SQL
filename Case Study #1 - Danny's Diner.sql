@@ -2,8 +2,6 @@
    Case Study Questions
    --------------------*/
 
--- 7. Which item was purchased just before the customer became a member?
--- 8. What is the total items and amount spent for each member before they became a member?
 -- 9.  If each $1 spent equates to 10 points and sushi has a 2x points multiplier - how many points would each customer have?
 -- 10. In the first week after a customer joins the program (including their join date) they earn 2x points on all items, not just sushi - 
 --     how many points do customer A and B have at the end of January?
@@ -83,6 +81,48 @@ INNER JOIN dannys_diner.menu
 ON sales.product_id = menu.product_id
 WHERE order_date > join_date
 ORDER BY sales.customer_id, order_date;
+
+--- edited query
+WITH first_purchase_cte AS
+	(
+		SELECT sales.customer_id, join_date, order_date
+		,product_name,
+      	DENSE_RANK() OVER(PARTITION BY sales.customer_id
+		ORDER BY order_date ASC) AS dr
+		FROM dannys_diner.sales INNER JOIN dannys_diner.members
+		ON sales.customer_id = members.customer_id
+		INNER JOIN dannys_diner.menu
+		ON sales.product_id = menu.product_id
+		WHERE order_date >= join_date
+		ORDER BY sales.customer_id, order_date
+	)
+SELECT customer_id, join_date, order_date, product_name
+FROM first_purchase_cte
+WHERE dr = 1
+ORDER BY customer_id;
+
+
+-- 7. Which item was purchased just before the customer became a member?
+WITH purchased_before_memberCTE AS
+	(
+		SELECT sales.customer_id, join_date, order_date
+		,product_name,
+      		DENSE_RANK() OVER(PARTITION BY sales.customer_id
+		ORDER BY order_date DESC) AS dr
+		FROM dannys_diner.sales INNER JOIN dannys_diner.members
+		ON sales.customer_id = members.customer_id
+		INNER JOIN dannys_diner.menu
+		ON sales.product_id = menu.product_id
+		WHERE order_date < join_date
+		ORDER BY sales.customer_id, order_date DESC
+      )
+SELECT customer_id, join_date, order_date, product_name
+FROM purchased_before_memberCTE
+WHERE dr = 1
+ORDER BY customer_id;
+
+
+-- 8. What is the total items and amount spent for each member before they became a member?
 
 
 
