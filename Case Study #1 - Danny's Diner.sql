@@ -123,7 +123,15 @@ ORDER BY customer_id;
 
 
 -- 8. What is the total items and amount spent for each member before they became a member?
-
+--- initial query
+SELECT sales.customer_id, product_name, COUNT(sales.product_id), SUM(price)
+FROM  dannys_diner.sales INNER JOIN dannys_diner.members
+ON sales.customer_id = members.customer_id
+INNER JOIN dannys_diner.menu
+ON sales.product_id = menu.product_id
+WHERE order_date < join_date
+GROUP BY sales.customer_id, product_name
+ORDER BY sales.customer_id;
 
 
 
