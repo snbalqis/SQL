@@ -1,7 +1,7 @@
 /* --------------------
    Case Study Questions
    --------------------*/
--- 6. Which item was purchased first by the customer after they became a member?
+
 -- 7. Which item was purchased just before the customer became a member?
 -- 8. What is the total items and amount spent for each member before they became a member?
 -- 9.  If each $1 spent equates to 10 points and sushi has a 2x points multiplier - how many points would each customer have?
@@ -51,6 +51,39 @@ ORDER BY COUNT(product_name) DESC;
 
 
 -- 5. Which item was the most popular for each customer?
+--- initial query
+SELECT sales.customer_id, menu.product_name, COUNT(sales.product_id) AS total,
+FROM dannys_diner.menu INNER JOIN dannys_diner.sales
+ON sales.product_id = menu.product_id
+GROUP BY sales.customer_id, menu.product_name;
+
+--- edited query
+WITH popular_item_cte AS
+	(
+ 		SELECT sales.customer_id, menu.product_name
+		,COUNT(sales.product_id) AS total,
+  		DENSE_RANK() OVER(PARTITION BY sales.customer_id
+  		ORDER BY COUNT(sales.customer_id) DESC) AS dr
+		FROM dannys_diner.menu INNER JOIN dannys_diner.sales
+ 		ON sales.product_id = menu.product_id
+		GROUP BY sales.customer_id, menu.product_name
+	)
+SELECT customer_id, product_name, total
+FROM popular_item_cte
+WHERE dr = 1
+ORDER BY customer_id, product_name;
+
+
+-- 6. Which item was purchased first by the customer after they became a member?
+--- initial query
+SELECT sales.customer_id, join_date, order_date, product_name
+FROM dannys_diner.sales INNER JOIN dannys_diner.members
+ON sales.customer_id = members.customer_id
+INNER JOIN dannys_diner.menu
+ON sales.product_id = menu.product_id
+WHERE order_date > join_date
+ORDER BY sales.customer_id, order_date;
+
 
 
 
