@@ -160,6 +160,20 @@ FROM dannys_diner.sales INNER JOIN dannys_diner.menu
 ON sales.product_id = menu.product_id
 ORDER BY customer_id, sales.product_id;
 
-
+--- edited query
+WITH customer_points_cte AS
+	(
+		SELECT customer_id, order_date, sales.product_id, price,
+		CASE
+    	WHEN sales.product_id = 1 THEN (price*20)
+    	ELSE (price*10)
+		END AS points
+		FROM dannys_diner.sales INNER JOIN dannys_diner.menu
+		ON sales.product_id = menu.product_id
+		ORDER BY customer_id, sales.product_id
+	)
+SELECT customer_id, SUM(points)
+FROM customer_points_cte
+GROUP BY customer_id;
 
 
