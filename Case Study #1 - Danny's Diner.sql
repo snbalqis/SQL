@@ -198,5 +198,41 @@ INNER JOIN customerDates_cte cd
 ON cd.customer_id = sales.customer_id
 ORDER BY sales.customer_id, sales.product_id;
 
+----------------------------------------------------
+/* --------------------
+     Bonus Questions
+   --------------------
 
+Recreate the following table output using the available data:
 
+customer_id	order_date	product_name	price	member
+A		2021-01-01	curry		15	N
+A		2021-01-01	sushi		10	N
+A		2021-01-07	curry		15	Y
+A		2021-01-10	ramen		12	Y
+A		2021-01-11	ramen		12	Y
+A		2021-01-11	ramen		12	Y
+B		2021-01-01	curry		15	N
+B		2021-01-02	curry		15	N
+B		2021-01-04	sushi		10	N
+B		2021-01-11	sushi		10	Y
+B		2021-01-16	ramen		12	Y
+B		2021-02-01	ramen		12	Y
+C		2021-01-01	ramen		12	N
+C		2021-01-01	ramen		12	N
+C		2021-01-07	ramen		12	N
+
+*/
+
+--- query
+SELECT sales.customer_id, sales.order_date, menu.product_name, menu.price,
+	CASE
+	WHEN sales.order_date >= members.join_date THEN 'Y'
+	ELSE 'N'
+	END AS member
+FROM sales
+FULL JOIN menu
+ON sales.product_id = menu.product_id
+FULL JOIN members
+ON members.customer_id = sales.customer_id
+ORDER BY sales.customer_id, sales.order_date, menu.product_name;
