@@ -285,8 +285,10 @@ SELECT *,
 	CASE
 	WHEN member = 'N' then NULL
 	ELSE
-		DENSE_RANK () OVER(PARTITION BY customer_id, member ORDER BY order_date)
+		DENSE_RANK () OVER(PARTITION BY customer_id, member
+		ORDER BY order_date)
 	END AS ranking
-FROM joined_cte;
+FROM joined_cte
+ORDER BY customer_id, order_date, product_name;
 
 
