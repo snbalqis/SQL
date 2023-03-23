@@ -177,7 +177,26 @@ GROUP BY customer_id;
 
 -- 10. In the first week after a customer joins the program (including their join date) they earn 2x points on all items, not just sushi - 
 --     how many points do customer A and B have at the end of January?
-
+--- first query
+WITH customerDates_cte AS
+		(
+			SELECT *, DATEADD(day, 6, join_date) AS firstweek_date, EOMONTH('2021-01-31') AS endJan_date
+			FROM members
+		)
+SELECT cd.customer_id, cd.join_date, order_date, cd.firstweek_date, cd.endJan_date, 
+	   sales.product_id, price,
+	CASE
+	WHEN order_date BETWEEN cd.join_date AND cd.firstweek_date THEN (price*20)
+	WHEN order_date < firstweek_date AND sales.product_id = 1 THEN (price*20)
+	WHEN order_date > firstweek_date AND sales.product_id = 1 THEN (price*20)
+	ELSE (price*10)
+	END AS points
+FROM sales
+INNER JOIN menu
+ON sales.product_id = menu.product_id
+INNER JOIN customerDates_cte cd
+ON cd.customer_id = sales.customer_id
+ORDER BY sales.customer_id, sales.product_id;
 
 
 
